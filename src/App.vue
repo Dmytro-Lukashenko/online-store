@@ -1,17 +1,14 @@
 <template>
   <v-app>
-    <v-navigation-drawer app></v-navigation-drawer>
-    <v-app-bar app></v-app-bar>
-    <v-main>
-      Hello World
-      <router-view></router-view>
-    </v-main>
+    <navbar/>
   </v-app>
 </template>
 
 <script>
-
+import navbar from './components/Navbar'
 export default {
-  
+  components: {
+    navbar
+  }
 }
 </script>
