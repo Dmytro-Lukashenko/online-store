@@ -37,9 +37,10 @@
                   <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn 
-                        :disabled="!valid || !password || !email"
+                        :disabled="!valid || !password || !email || loading"
                         color="primary"
-                        @click="onSubmit"                        
+                        @click="onSubmit" 
+                        :loading="loading"                       
                         >Login</v-btn>                      
                   </v-card-actions>
               </v-card>                                                           
@@ -65,14 +66,29 @@ export default {
             ]
         }
     },
+    computed:{
+        loading() {
+            this.$store.getters.loading
+        }
+    },
     methods: {
         onSubmit() {
             if(this.$refs.form.validate()) {
                 const user = {
                     email: this.email,
                     password: this.password,
-                }                
+                }
+                this.$store.dispatch('loginUser', user)    
+                .then (() => {
+                    this.$router.push('/')
+                })
+                .catch (() => {})                 
             }
+        }
+    },
+    created () {
+        if (this.$route.query['loginError']){
+            this.$store.dispatch('setError', 'Please log in to access this page')
         }
     }
 }
