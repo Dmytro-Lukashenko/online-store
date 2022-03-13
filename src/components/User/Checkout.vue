@@ -18,7 +18,6 @@
                              @change="markDone(order)"
                             ></v-checkbox>
                             </v-list-item-action>
-
                             <v-list-item-content>
                             <v-list-item-title> {{ order.name }} </v-list-item-title>
                             <v-list-item-subtitle> {{ order.phone }} </v-list-item-subtitle>
