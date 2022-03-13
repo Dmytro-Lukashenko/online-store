@@ -22,19 +22,24 @@
       </v-list-item>
     </v-list>
         </v-navigation-drawer>        
-        <v-toolbar>
+        <v-toolbar dark  src="https://cdn.vuetifyjs.com/images/backgrounds/vbanner.jpg">
             <v-app-bar-nav-icon 
             @click="sideNav = !sideNav"
-            class="hidden-md-and-up"
+            class="hidden-md-and-up"            
             />
-            <v-toolbar-title>Online Store</v-toolbar-title>
+            <v-toolbar-title>
+                <router-link :to="'/'" tag="span" class="pointer">
+                    Online Store
+                </router-link>
+            </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items class="hidden-sm-and-down">
                 <v-btn 
                     text 
                     v-for="(link, i) in links"
                     :key="i"      
-                    :to="link.url"       
+                    :to="link.url"   
+                    color="white"    
                     >
                     <v-icon left size="25px">{{ link.icon }}</v-icon>
                     {{link.title}}
@@ -85,6 +90,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+    .pointer{
+        cursor:pointer;
+    }
 </style>
