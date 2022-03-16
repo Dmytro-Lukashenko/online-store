@@ -80,10 +80,10 @@
                 <v-flex xs12>
                     <v-spacer></v-spacer>
                     <v-btn            
-                     :loading="loading"         
+                            
                      class="success"
                      @click="createProduct"
-                     :disabled="!valid || !price || loading">
+                     :disabled="!valid || !price">
                      Create Product                        
                     </v-btn>
                 </v-flex>
@@ -108,9 +108,9 @@ export default {
         }
     },
     computed: {
-        loading () {
-            return this.$store.getters.loading
-        }
+        // loading () {
+        //     return this.$store.getters.loading
+        // }
     },
     methods: {
         createProduct() {
