@@ -79,10 +79,11 @@
             <v-layout class="mb-3">
                 <v-flex xs12>
                     <v-spacer></v-spacer>
-                    <v-btn                     
+                    <v-btn            
+                     :loading="loading"         
                      class="success"
                      @click="createProduct"
-                     :disabled="!valid || !price">
+                     :disabled="!valid || !price || loading">
                      Create Product                        
                     </v-btn>
                 </v-flex>
@@ -106,6 +107,11 @@ export default {
             valid: false
         }
     },
+    computed: {
+        loading () {
+            return this.$store.getters.loading
+        }
+    },
     methods: {
         createProduct() {
             if(this.$refs.form.validate()){
@@ -118,7 +124,11 @@ export default {
                     description: this.description,
                     promo: this.promo
                 }
-                console.log(product)
+                this.$store.dispatch('createProduct', product)
+                .then(() => {
+                    this.$router.push('/list')
+                })
+                .catch(() => {})
             }
         }
     }

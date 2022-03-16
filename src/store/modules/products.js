@@ -1,3 +1,31 @@
+import { getDatabase, ref, set } from "firebase/database";
+
+class Product {
+  constructor(
+    title,
+    vendor,
+    color,
+    material,
+    price,
+    description,
+    ownerId,
+    imageSrc = "",
+    promo = false,
+    id = null
+  ) {
+    (this.title = title),
+      (this.vendor = vendor),
+      (this.color = color),
+      (this.material = material),
+      (this.price = price),
+      (this.description = description),
+      (this.ownerId = ownerId),
+      (this.imageSrc = imageSrc),
+      (this.promo = promo),
+      (this.id = id);
+  }
+}
+
 export default {
   state: {
     products: [
@@ -93,6 +121,45 @@ export default {
       };
     },
   },
-  mutations: {},
-  actions: {},
+  mutations: {
+    createProduct(state, payload) {
+      state.products.push(payload);
+    },
+  },
+  actions: {
+    async createProduct({ commit, getters }, payload) {
+      commit("clearError");
+      commit("setLoading", true);
+      //   commit("createProduct", payload);
+      try {
+        const newProduct = new Product(
+          payload.title,
+          payload.vendor,
+          payload.color,
+          payload.material,
+          payload.price,
+          payload.description,
+          getters.user.id,
+          payload.imagSrc,
+          payload.promo
+        );
+        const db = getDatabase();
+        let random = Math.floor(Math.random() * 1000);
+        const product = await set(
+          ref(db, random + newProduct.ownerId),
+          newProduct
+        );
+        commit("setLoading", false);
+        // console.log(product.key);
+        // commit("createProduct", {
+        //   ...newProduct,
+        //   id: product.key,
+        // });
+      } catch (error) {
+        commit("setError", error.message);
+        commit("setLoading", false);
+        throw error;
+      }
+    },
+  },
 };
