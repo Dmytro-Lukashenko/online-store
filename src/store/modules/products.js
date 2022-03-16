@@ -1,6 +1,14 @@
-import { setUserId } from "firebase/analytics";
-import * as firebase from "firebase/compat/app";
-import { getDatabase, ref, set, get, child, push } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  set,
+  get,
+  push,
+  child,
+  update,
+} from "firebase/database";
+import { getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref as sRef } from "firebase/storage";
 
 class Product {
   constructor(
@@ -41,8 +49,10 @@ export default {
         return product.promo;
       });
     },
-    myProducts(state) {
-      return state.products;
+    myProducts(state, getters) {
+      return state.products.filter((product) => {
+        return product.ownerId === getters.user.id;
+      });
     },
     productById(state) {
       return (productId) => {
@@ -57,12 +67,22 @@ export default {
     loadProducts(state, payload) {
       state.products = payload;
     },
+    updateProduct(state, { title, description, id }) {
+      const product = state.products.find((a) => {
+        return a.id === id;
+      });
+      product.title = title;
+      product.description = description;
+    },
   },
+
   actions: {
     async createProduct({ commit, getters }, payload) {
       commit("clearError");
       commit("setLoading", true);
-      commit("createProduct", payload);
+
+      const image = payload.image;
+
       try {
         const newProduct = new Product(
           payload.title,
@@ -72,14 +92,33 @@ export default {
           payload.price,
           payload.description,
           getters.user.id,
-          payload.imagSrc,
+          "",
           payload.promo
         );
+        //Add new product in RealTime Database
         const db = getDatabase();
-        let random = Math.floor(Math.random() * 1000);
-        const product = await set(ref(db, "products/" + random), newProduct);
+        const product = await push(ref(db, "products"), newProduct);
+        const imageExt = image.name.slice(image.name.lastIndexOf("."));
+
+        //Add image for new product in Storage
+        const storage = getStorage();
+        const storageRef = sRef(storage, `products/${product.key}${imageExt}`);
+        const fileData = await uploadBytes(storageRef, image);
+
+        //Add URL of image
+        const imageSrc = await getDownloadURL(storageRef);
+
+        //Save URL of image in product object
+        const dbUpdate = getDatabase();
+        const refUpdate = ref(dbUpdate, `products/${product.key}`);
+        await update(refUpdate, { imageSrc: imageSrc });
+
         commit("setLoading", false);
-        // commit("createProduct", {});
+        commit("createProduct", {
+          ...newProduct,
+          id: product.key,
+          imageSrc,
+        });
       } catch (error) {
         commit("setError", error.message);
         commit("setLoading", false);
@@ -89,15 +128,15 @@ export default {
     async fetchProducts({ commit }, payload) {
       commit("clearError");
       commit("setLoading", true);
-      // console.log(payload);
       const resultProducts = [];
       try {
         const db = ref(getDatabase());
         const productsVal = await get(child(db, `products/`));
         const products = productsVal.val();
-        console.log(products);
+
         Object.keys(products).forEach((key) => {
           const product = products[key];
+
           resultProducts.push(
             new Product(
               product.title,
@@ -112,18 +151,25 @@ export default {
               key
             )
           );
+
           commit("loadProducts", resultProducts);
           commit("setLoading", false);
         });
-        // .then(
-        //   (snapshot) => {
-        //     if (snapshot.exists()) {
-        //       console.log(snapshot.val());
-        //     } else {
-        //       console.log("No data available");
-        //     }
-        //   }
-        // );
+      } catch (error) {
+        commit("setError", error.message);
+        commit("setLoading", false);
+        throw error;
+      }
+    },
+    async updateProduct({ commit }, { title, description, id }) {
+      commit("clearError");
+      commit("setLoading", true);
+      try {
+        const dbUpdate = getDatabase();
+        const refUpdate = ref(dbUpdate, `products/${id}`);
+        await update(refUpdate, { title, description });
+        commit("updateProduct", { title, description, id });
+        commit("setLoading", false);
       } catch (error) {
         commit("setError", error.message);
         commit("setLoading", false);

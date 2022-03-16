@@ -9,7 +9,7 @@
                     <v-list-item 
                      v-for="(order, i) in orders"
                      :key="i"
-                     avatar>
+                     >
                         <template>
                             <v-list-item-action>
                             <v-checkbox

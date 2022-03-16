@@ -1,6 +1,6 @@
 <template>
   <v-container>
-      <section class="product mt-3 elevation-10">
+      <section class="product mt-3 elevation-10" v-if="!loading">
           <v-layout row wrap>
               <v-flex xs12 lg6>
                   <img :src="product.imageSrc" class="product_img">
@@ -29,17 +29,35 @@
                       <div class="title mb-5">
                         <p class="product_title mb-2">Description</p> {{ product.description }}
                       </div>
-                      <v-btn color="primary" class="headline mr-3">Edit</v-btn>
+                      <edit-product :product="product" v-if="isOwner"></edit-product>
                       <v-btn color="primary" class="headline">Buy</v-btn>
                   </div>
               </v-flex>
           </v-layout>
       </section>
+      <section v-else calss="text-center">
+        <v-container>
+            <v-layout row>
+              <v-flex xs12 class="text-center pt-5">
+                <v-progress-circular
+                    :size="100"
+                    :width="4"
+                    color="purple"
+                    indeterminate
+                ></v-progress-circular>
+              </v-flex>
+            </v-layout>
+        </v-container>
+      </section>
   </v-container>
 </template>
 
 <script>
+import EditProduct from './EditProduct.vue'
 export default {
+    components:{
+        EditProduct,
+    },
     props: {
         id: {
             type: String,
@@ -48,9 +66,14 @@ export default {
     },
     computed: {
         product() {
-            const id = this.id
-            console.log(id)
+            const id = this.id            
             return this.$store.getters.productById(id)
+        },
+        loading() {
+            return this.$store.getters.loading
+        },
+        isOwner() {
+            return this.product.ownerId === this.$store.getters.user.id
         }
     }
 }
