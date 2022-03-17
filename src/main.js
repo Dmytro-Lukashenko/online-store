@@ -1,5 +1,6 @@
 import Vue from "vue";
 import App from "./App.vue";
+import BuyDialogComponent from "@/components/Common/BuyDialog";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
@@ -7,6 +8,8 @@ import vuetify from "./plugins/vuetify";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+Vue.component("app-buy-dialog", BuyDialogComponent);
 
 new Vue({
   router,

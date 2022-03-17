@@ -2,18 +2,18 @@
   <v-dialog max-width="400" v-model="dialog">
       <template v-slot:activator="{ on, attrs }">
         <v-btn 
-         color="primary" 
-         class="headline mr-3" 
+         dark
+         color="light-blue darken-4"         
          v-bind="attrs" 
          v-on="on"         
-         >Edit</v-btn>
+         >Buy</v-btn>
          </template>
         <v-card>
             <v-container>
                 <v-layout row>
                     <v-flex>
                         <v-card-title>
-                            <h1 class="text-primary">Edit Product</h1>
+                            <h2 class="text-primary">Do you want to buy it?</h2>
                         </v-card-title>
                     </v-flex>
                 </v-layout>                
@@ -21,18 +21,17 @@
                     <v-flex>
                         <v-card-text>
                            <v-text-field                           
-                            name="title"
-                            label="Title"
+                            name="name"
+                            label="Name"
                             type="text"
-                            v-model="editedTitle"
+                            v-model="name"
                             >
                           </v-text-field>
                            <v-text-field                           
-                            name="description"
-                            label="Description"
-                            type="text"
-                            multiline
-                            v-model="editedDescription"
+                            name="phone"
+                            label="Phone"
+                            type="text"                            
+                            v-model="phone"
                             >
                           </v-text-field>
                         </v-card-text>
@@ -46,13 +45,16 @@
                              dark 
                              color="light-blue darken-4" 
                              outlined
-                             @click="onCancel"
-                             >Cancel</v-btn>
+                             @click="onClose"
+                             :disabled="localLoading"
+                             >Close</v-btn>
                             <v-btn 
                              dark 
                              color="light-blue darken-4"
-                             @click="onSave"
-                            >Save</v-btn>
+                             @click="onBuy"
+                             :disabled ="localLoading"
+                             :loading ="localLoading"
+                            >Buy It</v-btn>
                         </v-card-actions>
                     </v-flex>
                 </v-layout>
@@ -72,26 +74,32 @@ export default {
     data() {
         return {
             dialog:false,
-            editedTitle: this.product.title,
-            editedDescription: this.product.description
+            name: '',
+            phone: '',
+            localLoading: false
         }
     },
     methods: {
-        onCancel() {
-            this.editedTitle = this.product.title;
-            this.editedDescription = this.product.description;
+        onClose() {
+            this.name='';
+            this.phone='';
             this.dialog = false;
         },
-        onSave() {
-            if(this.editedTitle !== '' && this.editedDescription !== ''){
-            this.$store.dispatch('updateProduct', {
-                title: this.editedTitle,
-                description: this.editedDescription,
-                id: this.product.id,
-            })
-            this.dialog = false;
+        onBuy() {
+            if(this.name !== '' && this.phone !== ''){
+            this.$store.dispatch('createOrder', {
+                name: this.name,
+                phone: this.phone,
+                productId: this.product.id,
+                ownerId: this.product.ownerId
+            }).finally(() => {
+                this.name = ""
+                this.phone = ""
+                this.localLoading = false
+                this.dialog = false
+            })          
         }
-        }
+    }  
     }
 
 }

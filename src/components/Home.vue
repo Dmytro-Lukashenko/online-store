@@ -48,15 +48,11 @@
                          dark
                          rounded
                          outlined
+                         class="mr-2"
                          :to="'/product/' + product.id">
                             Description
                         </v-btn>
-                        <v-btn
-                         color="light-blue darken-4"
-                         dark                         
-                         rounded>
-                            Add to Cart
-                        </v-btn>       
+                        <app-buy-dialog :product="product"></app-buy-dialog>   
                         </v-card-actions>                
                     </v-card>
                 </v-col>
