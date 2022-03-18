@@ -27,7 +27,7 @@ export default {
         //Add new order in RealTime Database
         const db = getDatabase();
         await push(ref(db, `/users/${ownerId}/orders`), order);
-      } catch {
+      } catch (error) {
         commit("setError", error.message);
         throw error;
       }
@@ -42,17 +42,24 @@ export default {
           child(db, `/users/${getters.user.id}/orders`)
         );
         const orders = ordersVal.val();
+        if (orders) {
+          Object.keys(orders).forEach((key) => {
+            const order = orders[key];
 
-        Object.keys(orders).forEach((key) => {
-          const order = orders[key];
-
-          resultOrders.push(
-            new Order(order.name, order.phone, order.productId, order.done, key)
-          );
-        });
-        commit("loadOrders", resultOrders);
+            resultOrders.push(
+              new Order(
+                order.name,
+                order.phone,
+                order.productId,
+                order.done,
+                key
+              )
+            );
+          });
+          commit("loadOrders", resultOrders);
+        }
         commit("setLoading", false);
-      } catch {
+      } catch (error) {
         commit("setError", error.message);
         commit("setLoading", false);
         throw error;
