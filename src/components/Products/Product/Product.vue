@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import EditProduct from './EditProduct.vue'
+import EditProduct from '../Product/Product'
 export default {
     components:{
         EditProduct,
@@ -78,40 +78,6 @@ export default {
     }
 }
 </script>
-<style scoped>
-.product {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    border: 1px solid #1c77ad;
-    padding: 30px;
-    margin-bottom: 100px;
-}
-.product_img {
-    height:100%;
-    width:550px;
-}
-.product_info {
-    margin-left: 50px;
-}
-.product_title {
-    font-size: 1.6rem;
-    font-weight: bold;
-    color:#1875d0;
-    margin-bottom: 0;
-    margin-right:10px;
-}
-.product_category{
-    color:green;
-}
-.product_price {
-    color: red;
-}
-.product_color__bg{
-    display: inline-block;
-    width: 50px;
-    height: 20px;
-    border: 1px solid #2b2b2b;
-    border-radius: 10px;
-}
+<style lang="scss" scoped>
+@import './Product.scss'
 </style>

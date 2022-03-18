@@ -1,6 +1,6 @@
 import Vue from "vue";
 import App from "./App.vue";
-import BuyDialogComponent from "@/components/Common/BuyDialog";
+import BuyDialogComponent from "@/components/Common/BuyDialog/BuyDialog";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";

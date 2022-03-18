@@ -1,9 +1,10 @@
 <template>
   <v-dialog max-width="400" v-model="dialog">
       <template v-slot:activator="{ on, attrs }">
-        <v-btn 
-         color="primary" 
-         class="headline mr-3" 
+        <v-btn   
+         dark      
+         class="light-blue darken-4 mr-1"
+         rounded 
          v-bind="attrs" 
          v-on="on"         
          >Edit</v-btn>

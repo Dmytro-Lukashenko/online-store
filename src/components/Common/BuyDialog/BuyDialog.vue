@@ -2,8 +2,9 @@
   <v-dialog max-width="400" v-model="dialog">
       <template v-slot:activator="{ on, attrs }">
         <v-btn 
-         dark
-         color="light-blue darken-4"         
+         dark         
+         class="light-blue darken-4"
+         rounded         
          v-bind="attrs" 
          v-on="on"         
          >Buy</v-btn>
@@ -22,14 +23,14 @@
                         <v-card-text>
                            <v-text-field                           
                             name="name"
-                            label="Name"
+                            label="Your name"
                             type="text"
                             v-model="name"
                             >
                           </v-text-field>
                            <v-text-field                           
                             name="phone"
-                            label="Phone"
+                            label="Your phone"
                             type="text"                            
                             v-model="phone"
                             >

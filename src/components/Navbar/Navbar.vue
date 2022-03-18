@@ -128,8 +128,6 @@ export default {
 }
 </script>
 
-<style scoped>
-    .pointer{
-        cursor:pointer;
-    }
+<style lang="scss" scoped>
+@import './Navbar.scss'
 </style>

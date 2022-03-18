@@ -1,26 +1,25 @@
 <template>
   <v-container>
-      <v-layout row v-if="!loading && myProducts.length !== 0">
+      <v-layout row  v-if="!loading && myProducts.length !== 0">
           <v-flex xs12 sm6 offset-sm3>
-              <h1 class="text-secondary mb3">My Products</h1>
+              <h1 class="text-secondary mb-5">My Products</h1>
               <v-card 
-               class="elevation-5 mb-2"
+               class="elevation-5 mb-5 px-3"
                v-for="(product, i) in myProducts"
                :key="i"
                >
-                  <v-layout>
+                  <v-layout row class="pl-2 py-2">
                       <v-flex xs4>
                           <v-img
                            :src="product.imageSrc"
-                           height="250px"
+                           max-height="250px"
                           >
 
                           </v-img>
                       </v-flex>
                       <v-flex xs8>
                           <v-card-text>
-                              <h2 class="text-primary"> {{ product.title }} </h2>
-                              <p>Product Id: {{product.id}}</p>
+                              <h2 class="text-primary"> {{ product.title }} </h2>                              
                               <p>{{ product.description }}</p>
                           </v-card-text>
                           <v-card-actions>
@@ -37,7 +36,7 @@
       </v-layout>
       <v-layout v-else-if="!loading && myProducts.length === 0">
         <v-flex xs12 class="text-center">
-            <h1 class="text-primary">You have no products</h1>
+            <h1 class="text--primary">You have no products</h1>
         </v-flex>
       </v-layout>
       <v-layout v-else>

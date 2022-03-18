@@ -1,4 +1,4 @@
-import { getDatabase, ref, get, push, child } from "firebase/database";
+import { getDatabase, ref, get, push, child, update } from "firebase/database";
 
 class Order {
   constructor(name, phone, productId, done = false, id = null) {
@@ -26,7 +26,6 @@ export default {
       try {
         //Add new order in RealTime Database
         const db = getDatabase();
-        console.log(ownerId);
         await push(ref(db, `/users/${ownerId}/orders`), order);
       } catch {
         commit("setError", error.message);
@@ -43,27 +42,43 @@ export default {
           child(db, `/users/${getters.user.id}/orders`)
         );
         const orders = ordersVal.val();
-        console.log(orders);
+
         Object.keys(orders).forEach((key) => {
           const order = orders[key];
+
           resultOrders.push(
             new Order(order.name, order.phone, order.productId, order.done, key)
           );
         });
         commit("loadOrders", resultOrders);
+        commit("setLoading", false);
       } catch {
         commit("setError", error.message);
         commit("setLoading", false);
         throw error;
       }
     },
+    async markOrderDone({ commit, getters }, payload) {
+      commit("clearError");
+      try {
+        const dbUpdate = getDatabase();
+        const refUpdate = ref(
+          dbUpdate,
+          `/users/${getters.user.id}/orders/${payload}`
+        );
+        await update(refUpdate, { done: true });
+      } catch {
+        commit("setError", error.message);
+        throw error;
+      }
+    },
   },
   getters: {
     doneOrders(state) {
-      state.orders.filter((order) => order.done);
+      return state.orders.filter((order) => order.done === true);
     },
     unDoneOrders(state) {
-      state.orders.filter((order) => !order.done);
+      return state.orders.filter((order) => order.done === false);
     },
     orders(state, getters) {
       return getters.unDoneOrders.concat(getters.doneOrders);

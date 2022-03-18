@@ -7,7 +7,7 @@
               <v-carousel-item
                 v-for="(product,i) in promoProducts"
                 :key="i"
-                :src="product.imageSrc"               
+                :src="product.imageSrc"                             
                  ></v-carousel-item>
             </v-carousel>
           </v-flex>
@@ -95,18 +95,5 @@
   }
 </script>
 <style scoped>
-.card_heading {
-    font-weight: bold;
-    word-wrap: break-word;
-    text-align: center;
-    margin-bottom: 1.5rem;
-}
-.card_describe {
-    margin-top: auto;
-    padding-left: 1rem;
-}
-.card_price {
-    color: #c00f1b;
-    font-size: 18px;
-}
+@import './Home.scss'
 </style>
